@@ -44,7 +44,7 @@ public class ToolSearchSpeechlet implements SpeechletV2 {
 			Slot toolSlot = intent.getSlot("tool");
 			switch (toolSlot.getValue()) {
 			case "hammer":
-				return createResponse("success", "Hämmer findest du in Gang 666");
+				return createResponse("success", "Hämmer findest du in Gang 1337");
 			case "schraubenzieher":
 				return createResponse("success", toolSlot.getValue() + "findest du in Gang 13");
 			case "bohrer":
