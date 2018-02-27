@@ -68,7 +68,9 @@ public class ToolSearchSpeechlet implements SpeechletV2 {
 	private SpeechletResponse createResponse(String title, String content) {
 		SimpleCard card = createSimpleCard(title, content);
 		PlainTextOutputSpeech speech = createPlainTextOutputSpeech(content);
-		return SpeechletResponse.newTellResponse(speech, card);
+		Reprompt repromt = new Reprompt();
+		repromt.setOutputSpeech(createPlainTextOutputSpeech("Kann ich dir weiter behilflich sein"));
+		return SpeechletResponse.newAskResponse(speech, repromt, card);
 	}
 
 	private SimpleCard createSimpleCard(String title, String content) {
