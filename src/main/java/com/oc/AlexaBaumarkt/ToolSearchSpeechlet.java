@@ -1,8 +1,12 @@
 package com.oc.AlexaBaumarkt;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.amazon.speech.json.SpeechletRequestEnvelope;
 import com.amazon.speech.slu.Intent;
 import com.amazon.speech.slu.Slot;
+import com.amazon.speech.slu.entityresolution.Resolution;
 import com.amazon.speech.speechlet.IntentRequest;
 import com.amazon.speech.speechlet.LaunchRequest;
 import com.amazon.speech.speechlet.SessionEndedRequest;
@@ -42,17 +46,20 @@ public class ToolSearchSpeechlet implements SpeechletV2 {
 
 		if ("ToolSearchIntent".equals(intentName)) {
 			Slot toolSlot = intent.getSlot("tool");
-			switch (toolSlot.getValue()) {
-			case "hammer":
-				return createResponse("success", "Hämmer findest du in Gang 144");
-			case "schraubenzieher":
-				return createResponse("success", toolSlot.getValue() + "findest du in Gang 13");
-			case "bohrer":
-				return createResponse("success", toolSlot.getValue() + "findest du in Gang 55");
-			default:
+			String spokenValue = toolSlot.getValue();
+			List<String> relatedValues = getRelatedSlotTypes(toolSlot);
+
+			if (relatedValues.contains("hammer")) {
+				return createResponse("success", spokenValue + " findest du in Gang 144");
+			} else if (relatedValues.contains("schraubenzieher")) {
+				return createResponse("success", spokenValue + " findest du in Gang 13");
+			} else if (relatedValues.contains("bohrer")) {
+				return createResponse("success", spokenValue + " findest du in Gang 55");
+			} else {
 				return createResponse("not_found",
-						"Ich weiß leider nicht wo " + toolSlot.getValue() + " zu finden sind");
+						"Ich weiß leider nicht wo " + spokenValue + " zu finden sind");
 			}
+
 		} else {
 			return createResponse("unsupported", "Das kann ich leider nicht. Bitte versuche etwas anderes.");
 		}
@@ -63,6 +70,12 @@ public class ToolSearchSpeechlet implements SpeechletV2 {
 	public void onSessionEnded(SpeechletRequestEnvelope<SessionEndedRequest> requestEnvelope) {
 		// TODO Auto-generated method stub
 
+	}
+
+	private List<String> getRelatedSlotTypes(Slot slot) {
+		return slot.getResolutions().getResolutionsPerAuthority().stream()
+				.flatMap(resolution -> resolution.getValueWrappers().stream())
+				.map(wrapper -> wrapper.getValue().getName()).collect(Collectors.toList());
 	}
 
 	private SpeechletResponse createResponse(String title, String content) {

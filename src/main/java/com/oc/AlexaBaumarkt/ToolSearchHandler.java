@@ -19,7 +19,6 @@ public class ToolSearchHandler extends SpeechletRequestStreamHandler {
 
 	public ToolSearchHandler() {
 		super(new ToolSearchSpeechlet(), supportedApplicationIds);
-		// TODO Auto-generated constructor stub
 	}
 
 }
