@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import com.amazon.speech.json.SpeechletRequestEnvelope;
 import com.amazon.speech.slu.Intent;
 import com.amazon.speech.slu.Slot;
-import com.amazon.speech.slu.entityresolution.Resolution;
 import com.amazon.speech.speechlet.IntentRequest;
 import com.amazon.speech.speechlet.LaunchRequest;
 import com.amazon.speech.speechlet.SessionEndedRequest;
@@ -19,7 +18,7 @@ import com.amazon.speech.ui.Reprompt;
 import com.amazon.speech.ui.SimpleCard;
 
 public class ToolSearchSpeechlet implements SpeechletV2 {
-
+	
 	@Override
 	public void onSessionStarted(SpeechletRequestEnvelope<SessionStartedRequest> requestEnvelope) {
 		// TODO Auto-generated method stub
@@ -60,6 +59,8 @@ public class ToolSearchSpeechlet implements SpeechletV2 {
 						"Ich weiß leider nicht wo " + spokenValue + " zu finden sind");
 			}
 
+		} else if ("AMAZON.StopIntent".equals(intentName)) {
+			return createResponse("success", "Bis zum nächsten mal");
 		} else {
 			return createResponse("unsupported", "Das kann ich leider nicht. Bitte versuche etwas anderes.");
 		}
